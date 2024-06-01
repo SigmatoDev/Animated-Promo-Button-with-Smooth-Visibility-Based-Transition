@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Button Animation</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200vh; /* Increase the height to test scroll behavior */
+    margin: 0;
+  }
+  .button-container {
+    position: relative;
+    overflow: hidden;
+  }
+  .button {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 0px;
+    cursor: pointer;
+    position: relative;
+    white-space: nowrap;
+    transition: all 0.5s ease;
+  }
+  .button .extra-layer {
+    display: none;
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 0px;
+    position: absolute;
+    right: -100%; /* Start position outside */
+    white-space: nowrap;
+    transition: right 0.5s ease;
+  }
+  .button.expanded .extra-layer {
+    display: inline-block;
+    right: 0;
+  }
+  .button-text {
+    padding: 10px 20px;
+    transition: margin-right 0.5s ease;
+  }
+  .button.expanded .button-text {
+    margin-right: 100px; /* Adjust this value to provide space for the extra layer */
+  }
+</style>
+</head>
+<body>
+
+<div class="button-container">
+  <button class="button" id="promoButton">
+    <span class="button-text">Book Now</span>
+    <span class="extra-layer">20% OFF</span>
+  </button>
+</div>
+
+<script>
+function isElementInViewport(el) {
+  const rect = el.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
+}
+
+let visibilityTimeout;
+
+function checkVisibility() {
+  const button = document.getElementById('promoButton');
+  if (isElementInViewport(button)) {
+    clearTimeout(visibilityTimeout);
+    visibilityTimeout = setTimeout(() => {
+      button.classList.add('expanded');
+    }, 500); // Delay before showing the extra layer
+  } else {
+    clearTimeout(visibilityTimeout);
+    visibilityTimeout = setTimeout(() => {
+      button.classList.remove('expanded');
+    }, 500); // Delay before hiding the extra layer
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const button = document.getElementById('promoButton');
+    if (isElementInViewport(button)) {
+      button.classList.add('expanded');
+    }
+  }, 1000); // Initial delay before showing the extra layer
+
+  window.addEventListener('scroll', checkVisibility);
+  window.addEventListener('resize', checkVisibility);
+});
+
+</script>
+
+</body>
+</html>
